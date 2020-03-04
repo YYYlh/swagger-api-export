@@ -1,0 +1,26 @@
+{
+  "name": "swagger-url",
+  "version": "1.0.0",
+  "description": "将swagger中的接口导入到js文件中",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "swagger": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYYlh/swagger-url.git"
+  },
+  "author": "liuhao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YYYlh/swagger-url/issues"
+  },
+  "homepage": "https://github.com/YYYlh/swagger-url#readme",
+  "dependencies": {
+    "commander": "^4.1.1",
+    "superagent": "^5.2.2"
+  }
+}
