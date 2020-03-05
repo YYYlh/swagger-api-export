@@ -42,21 +42,28 @@ exports.writeRestUrlFile = function(fileData) {
     for (const item of fileData.paths[key].tagName) {
       const pathArr = item.path.split('/')
       pathKey = pathArr[pathArr.length - 1]
+    // ====== 拼接字符串区域 start===============
       pathStr += `
     ${pathKey}: ${formatName} + '${item.path}', // ${item.summary}`
     }
+    // ====== 拼接字符串区域 end===============
+    pathStr = deleteFirstRow(pathStr)
+// ====== 拼接字符串区域 start===============
     str +=`
   ${format(key)}: { // ${fileData.paths[key].description}
-    ${pathStr}
-  },\n`}
-  const content = `
+${pathStr}
+  },`}
+  str = deleteFirstRow(str)
+  let content = `
 import { ${formatName} } from './config.js'
 
 export const ${formatName} = {
 ${str}
 }
-`
+` 
+// ====== 拼接字符串区域 end===============
   fs.readFile(`${fileData.serverName}-url.js`, (err, data) => {
+    content = deleteFirstRow(content)
     if (err) {
       wirte(content)
     } else if(!String(data)) {
@@ -78,4 +85,11 @@ ${str}
       console.log('\x1B[32m%s\x1b[39m', `${fileData.serverName}-url.js写入成功 👌`);
     })
   }
+}
+
+// 删除文件内容的第一行
+function deleteFirstRow(data) {
+  const arr = String(data).split('\n')
+  let result = arr.splice(1)
+  return result.join('\n')
 }
