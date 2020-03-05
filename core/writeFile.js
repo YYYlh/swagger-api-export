@@ -50,7 +50,7 @@ ${pathStr}
   let content = `
 import { ${formatName} } from './config.js'
 
-export const ${formatName} = {
+export const ${formatName}Url = {
 ${str}
 }
 ` 
