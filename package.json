@@ -1,6 +1,6 @@
 {
   "name": "swagger-url",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "将swagger中的接口导入到js文件中",
   "main": "index.js",
   "scripts": {
