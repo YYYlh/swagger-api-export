@@ -8,8 +8,8 @@ npm i swagger-url -g
 ```
 - 命令行输入后台服务地址（swagger）
 ```
-swagger http://192.0.0.1:90/uums-server
+pure http://192.0.0.1:90/uums-server
 ```
 - 可配置可选api接口和配置别名
 ```
-swagger http://192.0.0.1:90/uums-server other-controller:other app-controller
+pure http://192.0.0.1:90/uums-server other-controller:other app-controller
