@@ -1,13 +1,13 @@
 {
   "name": "swagger-url",
-  "version": "1.0.4",
+  "version": "1.0.0",
   "description": "将swagger中的接口导入到js文件中",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "swagger": "index.js"
+    "pure": "index.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,12 @@
   },
   "homepage": "https://github.com/YYYlh/swagger-url#readme",
   "dependencies": {
-    "commander": "^4.1.1",
+    "chalk": "^4.1.0",
+    "commander": "^5.1.0",
+    "escodegen": "^2.0.0",
+    "esprima": "^4.0.1",
+    "estraverse": "^5.2.0",
+    "log-symbols": "^4.0.0",
     "superagent": "^5.2.2"
   }
 }
