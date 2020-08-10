@@ -7,9 +7,14 @@ module.exports = class Ast {
         return estraverse.traverse
     }
     parseModule(str) {
-        return esprima.parseModule(str)
+        return esprima.parseModule(str, {
+            range: true,
+            comment: true
+        })
     }
     generate(program) {
-        return escodegen.generate(program)
+        return escodegen.generate(program, {
+            comment: true
+        })
     }
 }

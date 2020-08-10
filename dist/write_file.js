@@ -9,7 +9,8 @@ const {
     templateStrTemplate,
     keyValueTemplate,
     es6ExportTemplate
-} = require('../lib/astTemplate')
+} = require('../lib/ast_template')
+const { hump } = require('../lib/utils')
 
 const ast = new Ast()
 const cwdDir = process.cwd()
@@ -58,6 +59,20 @@ module.exports = class WriteFile {
     writeRestFile({fileName, name, paths, initialPaths, aliasObj}) {
         let body = []
         let existsFileDatas = []
+        let commentsObj = {}
+        let tagNames = []
+        for (const key in initialPaths) {
+            const cur = initialPaths[key]
+            const tagName = cur.tagName
+            tagNames.push(...tagName)
+            commentsObj[hump(key)] = cur.description
+        }
+        for (const item of tagNames) {
+            const arr = item.path.split('/')
+            const len = arr.length
+            const key = arr[len - 1]
+            commentsObj[key] = item.summary
+        }
         const restUrlFilePath = path.join(configDir, `${fileName}.js`)
         if (fs.existsSync(restUrlFilePath)) {
             const fileData = this.readFile(restUrlFilePath)
@@ -95,10 +110,30 @@ module.exports = class WriteFile {
                 }
                 if (node.sourceType === 'module') {
                     node.body[1].declaration.properties.unshift(...existsFileDatas)
-                  }
+                }
             }
         })
-        fs.writeFileSync(restUrlFilePath, ast.generate(program))
+        ast.traverse()(program, {
+            leave(node) {
+                if (node.type === 'Property') {
+                    const key = node.key
+                    if (key.name in commentsObj) {
+                        const range = key.range
+                        const comment = commentsObj[key.name]
+                        const commentRange1 = range[0] - 5
+                        const commentRange = [commentRange1 - comment.length, commentRange1]
+                        node.leadingComments = [
+                            {
+                                type: "Line",
+                                value: comment,
+                                range: commentRange
+                            }
+                        ]
+                    }
+                }     
+            }
+        })
+        fs.writeFileSync(restUrlFilePath, ast.generate(program))  
         log.success(`${fileName}.js`)
     }
     mkConfigDir() {

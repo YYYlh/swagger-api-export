@@ -10,9 +10,13 @@ program
 program
     .command('fetch [serverUrl] [controllers...]')
     .description('读取swagger地址')
-    .action(function(serverUrl, controllers){
+    .action((serverUrl, controllers) => {
         new FetchSwagger(serverUrl, controllers)
     })
+program
+    .command('ui')
+    .description('可视化配置')
+    .action(() => {
+        
+    })
 program.parse(process.argv)
-
- 
