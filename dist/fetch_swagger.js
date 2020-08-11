@@ -17,14 +17,15 @@ module.exports = class FetchSwagger {
                 new FormatData(res, this.controllers, (data) => {
                     if(typeof this.callback === 'function') {
                         this.callback(data)
-                        return
-                    }
-                    new WriteFile()
-                        .writeConfigFile(data.name, data.url)
-                        .writeRestFile(data)
+                    } else {
+                        new WriteFile()
+                            .writeConfigFile(data.name, data.url)
+                            .writeRestFile(data)
+                    }  
                 })
             })
         }, err => {
+            this.callback(err)
             log.error(`请求错误：${url}`)
         })
     }
