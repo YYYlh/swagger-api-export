@@ -13,3 +13,8 @@ pure http://192.0.0.1:90/uums-server
 - 可配置可选api接口和配置别名
 ```
 pure http://192.0.0.1:90/uums-server other-controller:other app-controller
+```
+
+- 可视化选择接口
+```
+pure ui
