@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <div>
+    <div class="search">
       <input type="text" v-model="url">
-      <button @click="getServerData">冲</button>
+      <button @click="getServerData">提交</button>
     </div>
-    <div>
-      <CheckList :data="data" :url="url"/>
+    <div class="main">
+      <CheckList :data="data" :url="url" ref="checkEl"/>
     </div>
-  </div>
+    <button @click="submit" class="submit-button">确定</button>
 </template>
 
 <script>
@@ -36,6 +35,9 @@ export default {
         }).then(value => {
           data.value = value   
         })
+      },
+      submit() {
+        this.$refs.checkEl.submit()
       }
     }
     return {
@@ -46,3 +48,26 @@ export default {
   }
 }
 </script>
+<style>
+.search input {
+  height: 30px;
+  width: 40%;
+  padding-left: 20px;
+  border-radius: 10px;
+  border: 1px solid #dcdfe6;
+  color: #606266;
+  outline: none;
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+}
+input:focus {
+  border-color: #409eff;
+}
+.main {
+  margin-top: 10px;
+  height: calc(100vh - 125px);
+  margin-left: 20%;
+}
+.submit-button {
+  
+}
+</style>

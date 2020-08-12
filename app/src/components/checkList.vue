@@ -1,18 +1,19 @@
 <template>
-  <div v-if="paths">
-    <div v-for="(controller, index) in paths" :key="index">
-      <span :class="{isCheck: paths[index].checkAll}" class="check" @click="check(index)"></span>
-      <span>{{ index }}--{{ controller.description }}</span>
-      <div v-for="(tag, ii) in controller.tagName" :key="ii">
-        <span
-          :class="{isCheck: paths[index].tagName[ii].check}"
-          class="check"
-          @click="checkItem(index, tag.path, ii)"
-        ></span>
-        <span>{{ url + tag.path }}--{{ tag.summary }}</span>
-      </div>
+  <div v-if="paths" class="content">
+    <div class="collapse">
+      <div v-for="(controller, index) in paths" :key="index" class="root">
+       <!--  <span :class="{isCheck: paths[index].checkAll}" class="check" @click="check(index)"></span> -->
+        <span class="root-content">{{ index }}   --   {{ controller.description }}</span>
+        <div v-for="(tag, ii) in controller.tagName" :key="ii" class="item">
+          <span
+            :class="{isCheck: paths[index].tagName[ii].check}"
+            class="check"
+            @click="checkItem(index, tag.path, ii)"
+          ></span>
+          <span class="item-content">{{ tag.path }}   --   {{ tag.summary }}</span>
+        </div>
     </div>
-    <button @click="submit">确定</button>
+    </div>
   </div>
 </template>
 
@@ -33,11 +34,11 @@ export default {
   data() {
     return {
       paths: null,
+      checkObj: {}
     };
   },
   watch: {
     data(n) {
-      console.log(n);
       this.paths = JSON.parse(JSON.stringify(n.initialPaths));
     },
   },
@@ -97,12 +98,38 @@ export default {
 
 <style>
 .check {
+  margin-right: 10px;
+  transform: translateY(11px);
   display: inline-block;
   width: 20px;
   height: 20px;
-  background: yellow;
+  border: 1px solid #dcdfe6;
+  cursor: pointer;
 }
 .isCheck {
-  background: red;
+  background: #409eff;
+}
+.content {
+  height: 100%;
+  overflow: hidden;
+}
+.collapse {
+  height: calc(100% - 30px);
+  overflow: scroll;
+}
+span {
+  display: inline-block;
+  margin: 5px 0;
+}
+.root {
+  text-align: left;
+}
+.root-content {
+  height: 30px;
+  font-weight: bold;
+  font-size: 18px;
+}
+.item {
+  margin-left: 30px;
 }
 </style>

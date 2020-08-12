@@ -28,6 +28,9 @@ module.exports = class WriteFile {
         } else {
             finalPath = pathStr
         }
+        if (!fs.existsSync(finalPath)) {
+            return ''
+        }
         const buffer = fs.readFileSync(finalPath)
         return buffer.toString()
     }

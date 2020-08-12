@@ -24,6 +24,10 @@ app.get('/', (req, res) => {
     res.render('index')
 })
 app.post('/getServerData', jsonParser, (req, res) => {
+    if (!req.body.url) {
+        res.end(JSON.stringify({}))
+        return
+    }
     new FetchSwagger(req.body.url, []).getData(data => {
         // 读取文件
         const fileData = writeFile.readFile('', data.fileName)
