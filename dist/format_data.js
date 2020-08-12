@@ -2,6 +2,7 @@ const {hump} = require('../lib/utils')
 module.exports = class FormatData {
     aliasObj = {}
     constructor(data, controllers, callback) {
+        if (!data) return
         const { host, paths, basePath, tags } = data
         this.serverObj = {
             name: hump(basePath.slice(1)),

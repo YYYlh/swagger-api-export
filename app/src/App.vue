@@ -5,7 +5,7 @@
       <button @click="getServerData">冲</button>
     </div>
     <div>
-      <CheckList :initialPaths="initialPaths" :url="url"/>
+      <CheckList :data="data" :url="url"/>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   },
   setup() {
     const url = ref('http://39.98.70.84:8022/fms-server')
-    const initialPaths = ref(null)
+    const data = ref(null)
     const methonds = {
       getServerData() {
         const { value } = url
@@ -33,14 +33,14 @@ export default {
           method: 'POST',
         }).then(res => {
           return res.json()
-        }).then(data => {
-          initialPaths.value = data.initialPaths   
+        }).then(value => {
+          data.value = value   
         })
       }
     }
     return {
       url,
-      initialPaths,
+      data,
       ...methonds
     }
   }

@@ -20,6 +20,9 @@
 export default {
   name: "CheckList",
   props: {
+    data: {
+      type: Object
+    },
     initialPaths: {
       type: Object,
     },
@@ -33,18 +36,19 @@ export default {
     };
   },
   watch: {
-    initialPaths(n) {
-      this.paths = JSON.parse(JSON.stringify(n));
+    data(n) {
+      console.log(n);
+      this.paths = JSON.parse(JSON.stringify(n.initialPaths));
     },
   },
   methods: {
     check(item) {
       this.paths[item].checkAll = !this.paths[item].checkAll;
       for (const tag of this.paths[item].tagName) {
-        tag.check = this.paths[item].checkAll
+        tag.check = this.paths[item].checkAll;
       }
       if (!this.paths[item].checkAll) {
-        this.paths[item].check = false
+        this.paths[item].check = false;
       }
     },
     checkItem(controller, item, index) {
@@ -53,7 +57,8 @@ export default {
     },
     submit() {
       // 找到选中的数据
-      const tempObj = {};
+      const tempData = JSON.parse(JSON.stringify(this.data))
+      const tempObj = {}
       for (const key in this.paths) {
         const cur = this.paths[key];
         if (cur.checkAll) {
@@ -72,7 +77,19 @@ export default {
           };
         }
       }
-      console.log(tempObj);
+      tempData.paths = tempObj
+      fetch("http://localhost:520/submitServerData", {
+        body: JSON.stringify(tempData),
+        headers: {
+          "content-type": "application/json",
+        },
+        mode: "cors",
+        method: "POST",
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {});
     },
   },
 };

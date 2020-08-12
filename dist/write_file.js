@@ -21,8 +21,14 @@ module.exports = class WriteFile {
         this.exists = false
         this.mkConfigDir()
     }
-    readFile(path) {
-        const buffer = fs.readFileSync(path)
+    readFile(pathStr, name) {
+        let finalPath = ''
+        if (name) {
+            finalPath = path.join(configDir, `${name}.js`)
+        } else {
+            finalPath = pathStr
+        }
+        const buffer = fs.readFileSync(finalPath)
         return buffer.toString()
     }
     writeConfigFile(name, url) {
@@ -56,7 +62,7 @@ module.exports = class WriteFile {
         log.success(`${name}已写入config.js`)
         return this
     }
-    writeRestFile({fileName, name, paths, initialPaths, aliasObj}) {
+    writeRestFile({fileName, name, paths, initialPaths}) {
         let body = []
         let existsFileDatas = []
         let commentsObj = {}
