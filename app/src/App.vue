@@ -1,6 +1,6 @@
 <template>
     <div class="search">
-      <input type="text" v-model="url">
+      <input type="text" v-model="url" placeholder="请输入服务地址">
       <button @click="getServerData">提交</button>
     </div>
     <div class="main">
@@ -18,7 +18,7 @@ export default {
     CheckList
   },
   setup() {
-    const url = ref('http://39.98.70.84:8022/fms-server')
+    const url = ref('')
     const data = ref(null)
     const methonds = {
       getServerData() {
