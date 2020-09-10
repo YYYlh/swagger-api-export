@@ -10,14 +10,48 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:swagger-api-export.helloWorld"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [{
+				"id": "serverMenu",
+				"title": "アイウエオ",
+				"icon": "resources/swagger.svg"
+			}]
+		},
+		"views": {
+			"serverMenu": [
+				{
+					"id": "serverView.list",
+					"name": "List"
+				}
+			]
+		},
 		"commands": [
 			{
-				"command": "swagger-api-export.helloWorld",
-				"title": "Hello World"
+				"command": "swagger-api-export.add",
+				"title": "请先添加swagger服务地址",
+				"icon": {
+					"light": "resources/light/add.svg",
+					"dark": "resources/dark/add.svg"
+				}
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "swagger-api-export.add",
+					"when": "view == serverView.list",
+					"group": "navigation"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "serverView.list",
+				"contents": "请输入swagger服务地址"
 			}
 		]
 	},
