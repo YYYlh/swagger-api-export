@@ -37,6 +37,9 @@
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
 				}
+			}, {
+				"command": "swagger-api-export.remove",
+				"title": "删除swagger服务地址"
 			}
 		],
 		"menus": {
@@ -46,7 +49,23 @@
 					"when": "view == serverView.list",
 					"group": "navigation"
 				}
+			],
+			"view/item/context": [
+				{
+					"command": "swagger-api-export.remove",
+					"when": "view == serverView.list",
+					"group": "navigation"
+				}
 			]
+		},
+		"configuration": {
+			"properties": {
+				"swagger-api-export.servers": {
+					"type": "array",
+					"default": [],
+					"description": "配置需要导出的swagger服务地址"
+				}
+			}
 		},
 		"viewsWelcome": [
 			{
