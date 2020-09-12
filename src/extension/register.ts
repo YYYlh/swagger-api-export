@@ -15,8 +15,10 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
         })
     })
     // 删除swagger服务地址
-    const remove = commands.registerCommand('swagger-api-export.remove', (server) => {
-
+    const remove = commands.registerCommand('swagger-api-export.remove', (item) => {
+        serverModel.removeServerCfg(item.label, () => {
+            serverProvider.refresh()
+        })
     })
     context.subscriptions.push(...[add, remove])
 }

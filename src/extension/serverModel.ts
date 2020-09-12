@@ -15,9 +15,16 @@ class BaseModel {
         if (!sourceCfg.includes(server)) {
             sourceCfg.push(server)
         }
-        return config.update(this.key, sourceCfg)
+        return config.update(this.key, sourceCfg, true)
     }
 
+    protected removeCfg(server: string) {
+        const config = workspace.getConfiguration()
+        const defaultCfg: string[] = []
+        const sourceCfg = config.get(this.key, defaultCfg)
+        const newCfg = sourceCfg.filter(item => item !== server)
+        return config.update(this.key, newCfg, true)
+    }
 }
 
 export default class ServerModel extends BaseModel {
@@ -29,6 +36,13 @@ export default class ServerModel extends BaseModel {
         this.updateCfg(value).then(() => {
             cb && cb()
             window.showInformationMessage(`${value}已成功添加`)
+        })
+    }
+
+    removeServerCfg(value: string, cb?: Function) {
+        this.removeCfg(value).then(() => {
+            cb && cb()
+            window.showInformationMessage(`${value}已删除`)
         })
     }
 }
