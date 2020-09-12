@@ -15,11 +15,13 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"viewsContainers": {
-			"activitybar": [{
-				"id": "serverMenu",
-				"title": "アイウエオ",
-				"icon": "resources/swagger.svg"
-			}]
+			"activitybar": [
+				{
+					"id": "serverMenu",
+					"title": "アイウエオ",
+					"icon": "resources/swagger.svg"
+				}
+			]
 		},
 		"views": {
 			"serverMenu": [
@@ -37,7 +39,8 @@
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
 				}
-			}, {
+			},
+			{
 				"command": "swagger-api-export.remove",
 				"title": "删除swagger服务地址"
 			}
@@ -94,5 +97,8 @@
 		"mocha": "^8.0.1",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.4.0"
+	},
+	"dependencies": {
+		"axios": "^0.19.2"
 	}
 }
