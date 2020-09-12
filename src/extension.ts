@@ -12,8 +12,6 @@ export function activate(context: ExtensionContext) {
 	window.createTreeView('serverView.list', {
 		treeDataProvider: serverProvider
 	})
-	serverProvider.refresh()
-	
 }
 
 export function deactivate() {}
