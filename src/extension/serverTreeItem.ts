@@ -6,7 +6,7 @@ export default class ServerTreeItem extends TreeItem {
         this.label = name
         this.command = {
             title: name,
-            command: 'swagger-api-export.remove',
+            command: 'swagger-api-export.fetch',
             arguments: [
                 name
             ]
