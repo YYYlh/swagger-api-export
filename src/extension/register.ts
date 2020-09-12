@@ -1,6 +1,8 @@
 import { window, commands, ExtensionContext } from 'vscode'
 import ServerModel from './serverModel'
 import ServerProvider from './serverProvider'
+import TargetData from '../lib/targetData'
+import { TargetDataInfo } from '../bean/targetDataInfo'
 
 const serverModel = new ServerModel()
 
@@ -21,8 +23,8 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
         })
     })
     // 请求点击的服务地址
-    const fetch = commands.registerCommand('swagger-api-export-fetch', (item) => {
-
+    const fetch = commands.registerCommand('swagger-api-export.fetch', async (server) => {
+        const targetData: TargetDataInfo = await new TargetData(server).getData()
     })
     context.subscriptions.push(...[add, remove, fetch])
 }
