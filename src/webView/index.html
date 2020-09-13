@@ -15,10 +15,10 @@
             font-size: 20px;
         }
         .child {
-            margin-left:  40px;
+            margin: 10px 0 0 40px ;
             font-size: 16px;
         }
-        .child span:last-child {
+        .parentSpan2, .childSpan2 {
             color: #27ae60
         }
     </style>
@@ -26,21 +26,25 @@
 <body>
     $data
     <h1 class="h1"></h1>
+    <h2 class="h2"></h2>
     <div id="lh-content"></div>
 </body>
 <script>
     !function() {
         const dataDom = document.body.querySelector('#data')
         const h1 = document.querySelector('.h1')
+        const h2 = document.querySelector('.h2')
         const serverData = JSON.parse(dataDom.innerHTML)
-        const {title, apis} = serverData
+        const {baseUrl, title, apis} = serverData
         h1.innerText = title
+        h2.innerText = baseUrl
         let contentDom = document.querySelector('#lh-content')
         for (let i = 0, len = apis.length; i < len; i++) {
             const parentDom = document.createElement('div')
             parentDom.className = "parent"
             const parentSpan1 = document.createElement('span')
             const parentSpan2 = document.createElement('span')
+            parentSpan2.className = 'parentSpan2'
             parentSpan1.innerText = apis[i].name
             parentSpan2.innerText = `      //   ${apis[i].description}`
             parentDom.appendChild(parentSpan1)
@@ -51,7 +55,8 @@
                 childDom.className = "child"
                 const childSpan1 = document.createElement('span')
                 const childSpan2 = document.createElement('span')
-                childSpan1.innerText = cur.url
+                childSpan2.className = 'childSpan2'
+                childSpan1.innerText = baseUrl + cur.url
                 childSpan2.innerText = `     //   ${cur.summary}`
                 childDom.appendChild(childSpan1)
                 childDom.appendChild(childSpan2)
