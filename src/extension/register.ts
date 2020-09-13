@@ -3,6 +3,7 @@ import ServerModel from './serverModel'
 import ServerProvider from './serverProvider'
 import TargetData from '../lib/targetData'
 import { TargetDataInfo } from '../bean/targetDataInfo'
+import serverView from './serverView'
 
 const serverModel = new ServerModel()
 
@@ -25,6 +26,7 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
     // 请求点击的服务地址
     const fetch = commands.registerCommand('swagger-api-export.fetch', async (server) => {
         const targetData: TargetDataInfo = await new TargetData(server).getData()
+        serverView(context ,server, targetData)
     })
     // 打开swagger服务地址
     const open = commands.registerCommand('swagger-api-export.open', ({label}) => {
