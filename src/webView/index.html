@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #data {
+            display: none;
+        }
+        .h1 {
+            text-align: center;
+        }
+        .parent {
+            font-size: 20px;
+        }
+        .child {
+            margin-left:  40px;
+            font-size: 16px;
+        }
+        .child span:last-child {
+            color: #27ae60
+        }
+    </style>
+</head>
+<body>
+    $data
+    <h1 class="h1"></h1>
+    <div id="lh-content"></div>
+</body>
+<script>
+    !function() {
+        const dataDom = document.body.querySelector('#data')
+        const h1 = document.querySelector('.h1')
+        const serverData = JSON.parse(dataDom.innerHTML)
+        const {title, apis} = serverData
+        h1.innerText = title
+        let contentDom = document.querySelector('#lh-content')
+        for (let i = 0, len = apis.length; i < len; i++) {
+            const parentDom = document.createElement('div')
+            parentDom.className = "parent"
+            const parentSpan1 = document.createElement('span')
+            const parentSpan2 = document.createElement('span')
+            parentSpan1.innerText = apis[i].name
+            parentSpan2.innerText = `      //   ${apis[i].description}`
+            parentDom.appendChild(parentSpan1)
+            parentDom.appendChild(parentSpan2)
+            for (let j = 0, len = apis[i].list.length; j < len; j++) {
+                let cur = apis[i].list[j]
+                const childDom = document.createElement('div')
+                childDom.className = "child"
+                const childSpan1 = document.createElement('span')
+                const childSpan2 = document.createElement('span')
+                childSpan1.innerText = cur.url
+                childSpan2.innerText = `     //   ${cur.summary}`
+                childDom.appendChild(childSpan1)
+                childDom.appendChild(childSpan2)
+                parentDom.appendChild(childDom)
+            }
+            contentDom.appendChild(parentDom)
+        }
+        console.log('11', contentDom);
+        const vscode = acquireVsCodeApi()
+        vscode.postMessage({
+            command: 'alert',
+            text: apis
+        })
+    }()
+
+    /* function createElement(node, value) {
+        let result = document.createElement(node)
+        result.innerHTML = value
+    } */
+</script>
+</html>
