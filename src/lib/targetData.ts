@@ -12,7 +12,7 @@ export default class TargetData {
         const resourceData: ServerInfo = await this.fetchServer.request()
         let tempData: TargetDataInfo = {
             title: resourceData.title,
-            url: 'http://' + resourceData.host + resourceData.basePath,
+            baseUrl: 'http://' + resourceData.host + resourceData.basePath,
             apis: []
         }
         tempData.apis = this.margeApis(resourceData.tags, resourceData.paths)
