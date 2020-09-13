@@ -41,6 +41,10 @@
 				}
 			},
 			{
+				"command": "swagger-api-export.open",
+				"title": "打开swagger服务地址"
+			},
+			{
 				"command": "swagger-api-export.remove",
 				"title": "删除swagger服务地址"
 			}
@@ -55,9 +59,14 @@
 			],
 			"view/item/context": [
 				{
+					"command": "swagger-api-export.open",
+					"when": "view == serverView.list",
+					"group": "group2"
+				},
+				{
 					"command": "swagger-api-export.remove",
 					"when": "view == serverView.list",
-					"group": "navigation"
+					"group": "group1"
 				}
 			]
 		},

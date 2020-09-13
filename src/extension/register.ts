@@ -1,4 +1,4 @@
-import { window, commands, ExtensionContext } from 'vscode'
+import { window, commands, ExtensionContext, env, Uri } from 'vscode'
 import ServerModel from './serverModel'
 import ServerProvider from './serverProvider'
 import TargetData from '../lib/targetData'
@@ -26,5 +26,10 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
     const fetch = commands.registerCommand('swagger-api-export.fetch', async (server) => {
         const targetData: TargetDataInfo = await new TargetData(server).getData()
     })
-    context.subscriptions.push(...[add, remove, fetch])
+    // 打开swagger服务地址
+    const open = commands.registerCommand('swagger-api-export.open', ({label}) => {
+        const url = Uri.parse(`${label}/swagger-ui.html`)
+        env.openExternal(url)
+    })
+    context.subscriptions.push(...[add, remove, fetch, open])
 }
