@@ -15,7 +15,11 @@ export interface Tag {
 export interface PathsInfo {
     [key: string]: Get | Post,
 }
-export interface PathInfo extends PathsInfo {}
+export interface PathInfo {
+    url: string,
+    method: string,
+    summary: string
+}
 
 export interface ServerInfo {
     title: string,

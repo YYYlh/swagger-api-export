@@ -29,9 +29,16 @@ export default class TargetData {
                 list: []
             }
             for (const key in paths) {
-                let path: PathInfo = {}
-                path[key] = paths[key]
+                let path: PathInfo = {
+                    url: '',
+                    method: '',
+                    summary: '',
+                }
+                
                 if (paths[key].tags[0] === tag.name) {
+                    path.url = key
+                    path.summary = paths[key].summary
+                    path.method = paths[key].method
                     api.list.push(path)
                 }
             }
