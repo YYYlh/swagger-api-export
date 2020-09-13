@@ -9,6 +9,7 @@ const serverModel = new ServerModel()
 
 // 注册事件
 export function registerEvent(context: ExtensionContext, serverProvider: ServerProvider) {
+    let activeServer = ''
     // 添加swagger服务地址
     const add = commands.registerCommand('swagger-api-export.add', async () => {
         const server = await window.showInputBox({placeHolder: '请输入正确的swagger服务地址'})
@@ -26,6 +27,11 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
     // 请求点击的服务地址
     const fetch = commands.registerCommand('swagger-api-export.fetch', async (server) => {
         const targetData: TargetDataInfo = await new TargetData(server).getData()
+        if (activeServer === server) {
+            return
+        } else {
+            activeServer = server
+        }
         serverView(context ,server, targetData)
     })
     // 打开swagger服务地址
