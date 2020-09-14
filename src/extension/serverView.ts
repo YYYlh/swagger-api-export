@@ -1,8 +1,9 @@
-import { ViewColumn, Uri, ExtensionContext, window } from 'vscode'
+import { ViewColumn, Uri, ExtensionContext } from 'vscode'
 import ReusedWebviewPanel from './ReusedWebviewPanel'
 import { TargetDataInfo } from '../bean/targetDataInfo'
 import { join } from 'path'
 import { readFileSync } from 'fs'
+import { startWriteFile } from '../lib/startWriteFile'
 
 function serverView(context: ExtensionContext, server: string, data: TargetDataInfo) {
     const viewPath = join(context.extensionPath, 'src', 'webView')
@@ -22,8 +23,12 @@ function serverView(context: ExtensionContext, server: string, data: TargetDataI
     panel.webview.html = html
 
     panel.webview.onDidReceiveMessage(
-        message => {
-            console.log(message);
+        ({ command, data }) => {
+            switch (command) {
+                case 'postExportData':
+                    startWriteFile(context, data)
+                break
+            }
         },
         undefined,
         context.subscriptions
