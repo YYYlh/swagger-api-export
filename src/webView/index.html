@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,73 +9,140 @@
         #data {
             display: none;
         }
+
         .h1 {
             text-align: center;
         }
+
         .parent {
             font-size: 20px;
         }
+
         .child {
-            margin: 10px 0 0 40px ;
+            margin: 10px 0 0 40px;
             font-size: 16px;
+            cursor: pointer;
         }
-        .parentSpan2, .childSpan2 {
+
+        .parentSpan2,
+        .childSpan2 {
             color: #27ae60
         }
     </style>
 </head>
+
 <body>
     $data
     <h1 class="h1"></h1>
     <h2 class="h2"></h2>
     <div id="lh-content"></div>
+
+    <button>导出</button>
 </body>
 <script>
-    !function() {
+    let h = []
+    let serverData
+    const vscode = acquireVsCodeApi()
+    !function () {
         const dataDom = document.body.querySelector('#data')
         const h1 = document.querySelector('.h1')
         const h2 = document.querySelector('.h2')
-        const serverData = JSON.parse(dataDom.innerHTML)
-        const {baseUrl, title, apis} = serverData
+        serverData = JSON.parse(dataDom.innerHTML)
+        const { baseUrl, title, apis } = serverData
         h1.innerText = title
         h2.innerText = baseUrl
         let contentDom = document.querySelector('#lh-content')
         for (let i = 0, len = apis.length; i < len; i++) {
-            const parentDom = document.createElement('div')
-            parentDom.className = "parent"
-            const parentSpan1 = document.createElement('span')
-            const parentSpan2 = document.createElement('span')
-            parentSpan2.className = 'parentSpan2'
-            parentSpan1.innerText = apis[i].name
-            parentSpan2.innerText = `      //   ${apis[i].description}`
-            parentDom.appendChild(parentSpan1)
-            parentDom.appendChild(parentSpan2)
+            const parentSpan1 = createElement({ tag: 'span', value: apis[i].name, className: 'parentSpan1' })
+            const parentSpan2 = createElement({ tag: 'span', value: `      //   ${apis[i].description}`, className: 'parentSpan2' })
+            const parentDom = createElement({
+                tag: 'div',
+                className: 'parent',
+                childNodes: [parentSpan1, parentSpan2]
+            })
             for (let j = 0, len = apis[i].list.length; j < len; j++) {
                 let cur = apis[i].list[j]
-                const childDom = document.createElement('div')
-                childDom.className = "child"
-                const childSpan1 = document.createElement('span')
-                const childSpan2 = document.createElement('span')
-                childSpan2.className = 'childSpan2'
-                childSpan1.innerText = baseUrl + cur.url
-                childSpan2.innerText = `     //   ${cur.summary}`
-                childDom.appendChild(childSpan1)
-                childDom.appendChild(childSpan2)
+                const childSpan1 = createElement({ tag: 'span', value: baseUrl + cur.url, className: 'childSpan1' })
+                const childSpan2 = createElement({ tag: 'span', value: `     //   ${cur.summary}`, className: 'childSpan2' })
+                const childDom = createElement({ tag: 'div', className: 'child', childNodes: [childSpan1, childSpan2] })
                 parentDom.appendChild(childDom)
             }
             contentDom.appendChild(parentDom)
         }
-        console.log('11', contentDom);
-        const vscode = acquireVsCodeApi()
-        vscode.postMessage({
-            command: 'alert',
-            text: apis
-        })
+        listen()
     }()
-
-    /* function createElement(node, value) {
-        let result = document.createElement(node)
-        result.innerHTML = value
-    } */
+    function listen(callback) {
+        const parents = document.querySelectorAll('.parent')
+        for (let i = 0, len = parents.length; i < len; i++) {
+            const parent = parents[i]
+            h[i] = []
+            const childs = parent.querySelectorAll('.child')
+            for (let j = 0, len = childs.length; j < len; j++) {
+                h[i][j] = 0
+                const child = childs[j]
+                child.addEventListener('click', (e) => {
+                    if (h[i][j] === 0) {
+                        h[i][j] = 1
+                        child.style.color = 'red'
+                    } else {
+                        h[i][j] = 0
+                        child.style.color = ''
+                    }
+                })
+            }
+        }
+        const button = document.querySelector('button')
+        button.addEventListener('click', exportData)
+    }
+    function exportData() {
+        const { baseUrl, title, apis } = serverData
+        let exportData = {
+            title,
+            baseUrl,
+            apis: []
+        }
+        let tempApis = []
+        for(let i = 0, len = h.length; i < len; i++) {
+            let tempApi = {
+                description: apis[i].description,
+                name: apis[i].name,
+                list: []
+            }
+            let list = []
+            for (let j = 0, len = h[i].length; j < len; j++) { 
+                if (h[i][j] === 1) {
+                    list.push({
+                        summary: apis[i].list[j].summary,
+                        url: apis[i].list[j].url
+                    })
+                }
+            }
+            if (list.length !== 0) {
+                tempApi.list = list
+                exportData.apis.push(tempApi)
+            }
+        }
+        vscode.postMessage({
+            command: 'postExportData',
+            data: exportData
+        })
+    }
+    function createElement({ tag, value, className, childNodes }) {
+        let result = document.createElement(tag)
+        if (value !== undefined) {
+            result.innerHTML = value
+            result.innerText = value
+        }
+        if (className !== undefined) {
+            result.className = className
+        }  
+        if (childNodes && childNodes.length >= 0) {
+            for (const item of childNodes) {
+                result.appendChild(item)
+            }
+        }
+        return result
+    }
 </script>
+
 </html>
