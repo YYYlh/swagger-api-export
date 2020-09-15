@@ -5,7 +5,7 @@ import { join } from 'path'
 import { readFileSync } from 'fs'
 import { startWriteFile } from '../lib/startWriteFile'
 
-function serverView(context: ExtensionContext, server: string, data: TargetDataInfo) {
+function serverView(context: ExtensionContext, server: string, data: TargetDataInfo, writeFileDirPath: string) {
     const viewPath = join(context.extensionPath, 'src', 'webView')
     const panel = ReusedWebviewPanel.create(
         'serverView',
@@ -26,7 +26,7 @@ function serverView(context: ExtensionContext, server: string, data: TargetDataI
         ({ command, data }) => {
             switch (command) {
                 case 'postExportData':
-                    startWriteFile(context, data)
+                    startWriteFile(context, data, writeFileDirPath)
                 break
             }
         },
