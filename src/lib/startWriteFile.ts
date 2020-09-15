@@ -1,11 +1,16 @@
 import { ExtensionContext, window } from 'vscode'
 import { TargetDataInfo } from '../bean/targetDataInfo'
-import { WriteConfigFile } from './writeFile'
+import { WriteConfigFile, WriteRestUrlFile } from './writeFile'
 import { join } from 'path'
-let filePath = join('/Users/liuhao/Documents/日常/learn', '写代码的地方', 'index.js')
 
-export function startWriteFile(context: ExtensionContext, data: TargetDataInfo) {
-    new WriteConfigFile(filePath,  JSON.stringify(data)).write(() => {
-        window.showInformationMessage('ccc')
-    })
+let serverTitle = ''
+export function startWriteFile(context: ExtensionContext, data: TargetDataInfo, writeFileDirPath: string) {
+    
+    if (data.title !== serverTitle) {
+        serverTitle = data.title
+    } else {
+        new WriteRestUrlFile(join(writeFileDirPath, 'config.js'), [data.basePath, data.baseUrl]).write(() => {
+            window.showInformationMessage(`config.js已写入${serverTitle}`)
+        })
+    }
 }
