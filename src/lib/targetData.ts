@@ -13,6 +13,7 @@ export default class TargetData {
         let tempData: TargetDataInfo = {
             title: resourceData.title,
             baseUrl: 'http://' + resourceData.host + resourceData.basePath,
+            basePath: resourceData.basePath,
             apis: []
         }
         tempData.apis = this.margeApis(resourceData.tags, resourceData.paths)

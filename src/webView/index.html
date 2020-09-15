@@ -95,10 +95,11 @@
         button.addEventListener('click', exportData)
     }
     function exportData() {
-        const { baseUrl, title, apis } = serverData
+        const { baseUrl, title, apis, basePath } = serverData
         let exportData = {
             title,
             baseUrl,
+            basePath,
             apis: []
         }
         let tempApis = []
