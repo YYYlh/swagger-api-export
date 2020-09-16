@@ -108,6 +108,14 @@
 		"vscode-test": "^1.4.0"
 	},
 	"dependencies": {
-		"axios": "^0.19.2"
+		"@types/escodegen": "0.0.6",
+		"@types/esprima": "^4.0.2",
+		"@types/estraverse": "^5.1.0",
+		"axios": "^0.19.2",
+		"escodegen": "^2.0.0",
+		"esprima": "^4.0.1",
+		"estraverse": "^5.2.0",
+		"parser": "^0.1.4",
+		"traverse": "^0.6.6"
 	}
 }
