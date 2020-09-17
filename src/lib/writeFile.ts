@@ -1,7 +1,7 @@
 import { writeFileSync, readFileSync, existsSync } from 'fs'
-import { hump } from '../utils'
 import { programBodyTemplate, exportsVarTemplate } from '../astTemplate'
 import { parseModule, generate, traverse } from './ast'
+import { Api } from '../bean/targetDataInfo'
 
 class BaseFs {
     protected writeFile(path: string, data: string) {
@@ -20,14 +20,14 @@ class BaseFs {
 
 export class WriteRestUrlFile extends BaseFs {
     private path: string
-    private data: string
-    constructor(path: string, data: string) {
+    private data: [string, Api[]]
+    constructor(path: string, data: [string, Api[]]) {
         super()
         this.path = path
         this.data = data
     }
     write(callback: Function) {
-        this.writeFile(this.path, this.data)
+        // this.writeFile(this.path, this.data)
         callback()
     }
 }
@@ -41,20 +41,23 @@ export class WriteConfigFile extends BaseFs {
         this.data = data
     }
     write(callback: Function) {
-        let key = hump(this.data[0].substr(1), '-')
-        let value = this.data[1]
-
-        let body: any[] = []
         let resourceData = ''
-        let exists = false
-
         if (this.isExists(this.path)) {
-            resourceData = this.readFile(this.path)
+            resourceData = this.readFile(this.path)    
+        }
+        const finalData = this.disposeAst(this.data, resourceData)
+        this.writeFile(this.path, finalData)
+        callback()
+    }
+    disposeAst(data: string[], resourceData: string): string {
+        let [key, value] = data
+        let exists = false
+        let body: any[] = []
+        if (resourceData) {
             body = parseModule(resourceData).body
         }
         const dataAst = exportsVarTemplate(key, value)
         const program = programBodyTemplate(body)
-        
         traverse(program as any, {
             leave(node: any) {
                 if (node.type === 'VariableDeclaration') {
@@ -75,7 +78,6 @@ export class WriteConfigFile extends BaseFs {
                 }
             }
         })
-        this.writeFile(this.path, generate(program))
-        callback()
+        return generate(program)
     }
 }
