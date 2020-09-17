@@ -6,7 +6,7 @@ import { hump } from '../utils'
 
 let serverTitle = ''
 export function startWriteFile(context: ExtensionContext, data: TargetDataInfo, writeFileDirPath: string) {
-    let key = hump(data.basePath, '-') // 当做文件名和导出的变量名使用
+    let key = hump(data.basePath.slice(1), '-') // 当做文件名和导出的变量名使用
     if (data.title !== serverTitle) {
         serverTitle = data.title
         new WriteConfigFile(join(writeFileDirPath, 'config.js'), [key, data.baseUrl]).write(() => {
