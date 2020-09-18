@@ -12,7 +12,7 @@ import { parseModule, generate, traverse } from './ast'
 import { Api } from '../bean/targetDataInfo'
 import { hump } from '../utils'
 
-class BaseFs {
+export class BaseFs {
     protected writeFile(path: string, data: string) {
         writeFileSync(path, data)
     }
@@ -25,7 +25,7 @@ class BaseFs {
         return existsSync(path)
     }
 
-    protected upReadFile(path: string) {
+    upReadFile(path: string) {
         let result = ''
         if (this.isExists(path)) {
             result = this.readFile(path)

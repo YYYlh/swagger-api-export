@@ -42,6 +42,7 @@
 <script>
     let h = []
     let serverData
+    let hightLightColor = '#e74c3c'
     const vscode = acquireVsCodeApi()
     !function () {
         const dataDom = document.body.querySelector('#data')
@@ -53,6 +54,7 @@
         h2.innerText = baseUrl
         let contentDom = document.querySelector('#lh-content')
         for (let i = 0, len = apis.length; i < len; i++) {
+            h[i] = []
             const parentSpan1 = createElement({ tag: 'span', value: apis[i].name, className: 'parentSpan1' })
             const parentSpan2 = createElement({ tag: 'span', value: `      //   ${apis[i].description}`, className: 'parentSpan2' })
             const parentDom = createElement({
@@ -65,6 +67,12 @@
                 const childSpan1 = createElement({ tag: 'span', value: baseUrl + cur.url, className: 'childSpan1' })
                 const childSpan2 = createElement({ tag: 'span', value: `     //   ${cur.summary}`, className: 'childSpan2' })
                 const childDom = createElement({ tag: 'div', className: 'child', childNodes: [childSpan1, childSpan2] })
+                if (cur.checked) {
+                    h[i][j] = 1
+                    childDom.style.color = hightLightColor
+                } else {
+                    h[i][j] = 0
+                }
                 parentDom.appendChild(childDom)
             }
             contentDom.appendChild(parentDom)
@@ -75,15 +83,13 @@
         const parents = document.querySelectorAll('.parent')
         for (let i = 0, len = parents.length; i < len; i++) {
             const parent = parents[i]
-            h[i] = []
             const childs = parent.querySelectorAll('.child')
             for (let j = 0, len = childs.length; j < len; j++) {
-                h[i][j] = 0
                 const child = childs[j]
                 child.addEventListener('click', (e) => {
                     if (h[i][j] === 0) {
                         h[i][j] = 1
-                        child.style.color = 'red'
+                        child.style.color = hightLightColor
                     } else {
                         h[i][j] = 0
                         child.style.color = ''
@@ -95,8 +101,9 @@
         button.addEventListener('click', exportData)
     }
     function exportData() {
-        const { baseUrl, title, apis, basePath } = serverData
+        const { baseUrl, title, apis, basePath, key } = serverData
         let exportData = {
+            key,
             title,
             baseUrl,
             basePath,

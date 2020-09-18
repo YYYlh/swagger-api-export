@@ -1,6 +1,11 @@
 import FetchServer from './fetchServer'
 import { ServerInfo, PathsInfo, PathInfo, Tag } from '../bean/ServerInfo'
 import { TargetDataInfo, Api } from '../bean/TargetDataInfo'
+import { BaseFs } from '../lib/writeFile'
+import { join } from 'path'
+import { hump } from '../utils'
+
+const baseFs = new BaseFs()
 
 export default class TargetData {
     private fetchServer: FetchServer
@@ -8,19 +13,25 @@ export default class TargetData {
         this.fetchServer = new FetchServer(server)
     }
 
-    async getData(): Promise<TargetDataInfo> {
+    async getData(writeFileDirPath: string): Promise<TargetDataInfo> {
         const resourceData: ServerInfo = await this.fetchServer.request()
+        let key = hump(resourceData.basePath.slice(1), '-')
         let tempData: TargetDataInfo = {
+            key,
             title: resourceData.title,
             baseUrl: 'http://' + resourceData.host + resourceData.basePath,
             basePath: resourceData.basePath,
             apis: []
         }
-        tempData.apis = this.margeApis(resourceData.tags, resourceData.paths)
+        let fileData = ''
+        if (writeFileDirPath) {
+            fileData = baseFs.upReadFile(join(writeFileDirPath, `${key}.js`))
+        }
+        tempData.apis = this.margeApis(resourceData.tags, resourceData.paths, fileData)
         return tempData
     }
 
-    margeApis(tags: Tag[], paths: PathsInfo): Api[] {
+    margeApis(tags: Tag[], paths: PathsInfo, sourceFileData: string): Api[] {
         let apis: Api[] = []
         for (let i = 0, len = tags.length; i < len; i++) {
             let tag = tags[i]
@@ -34,12 +45,16 @@ export default class TargetData {
                     url: '',
                     method: '',
                     summary: '',
+                    checked: false
                 }
                 
                 if (paths[key].tags[0] === tag.name) {
                     path.url = key
                     path.summary = paths[key].summary
                     path.method = paths[key].method
+                    if (sourceFileData.includes(key)) {
+                        path.checked = true
+                    }
                     api.list.push(path)
                 }
             }
