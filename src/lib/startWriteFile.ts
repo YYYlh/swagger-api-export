@@ -6,12 +6,12 @@ import { hump } from '../utils'
 
 let serverTitle = ''
 export function startWriteFile(context: ExtensionContext, data: TargetDataInfo, writeFileDirPath: string) {
-    let key = hump(data.basePath.slice(1), '-') // 当做文件名和导出的变量名使用
+    const { key, baseUrl, apis } = data
     if (data.title !== serverTitle) {
         serverTitle = data.title
-        new WriteConfigFile(join(writeFileDirPath, 'config.js'), [key, data.baseUrl]).write(() => {
-            window.showInformationMessage(`config.js已写入${serverTitle}`)
+        new WriteConfigFile(join(writeFileDirPath, 'config.js'), [key, baseUrl]).write(() => {
+            window.showInformationMessage(`${serverTitle}已写入config.js`)
         })
     }
-    new WriteRestUrlFile(join(writeFileDirPath, `${key}.js`), [key, data.apis]).write(() => {})
+    new WriteRestUrlFile(join(writeFileDirPath, `${key}.js`), [key, apis]).write(() => {})
 }
