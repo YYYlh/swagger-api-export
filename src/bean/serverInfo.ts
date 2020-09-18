@@ -18,7 +18,8 @@ export interface PathsInfo {
 export interface PathInfo {
     url: string,
     method: string,
-    summary: string
+    summary: string,
+    checked?: boolean
 }
 
 export interface ServerInfo {
