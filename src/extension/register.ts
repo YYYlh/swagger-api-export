@@ -27,7 +27,6 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
     })
     // 请求点击的服务地址
     const fetch = commands.registerCommand('swagger-api-export.fetch', async (server) => {
-        const targetData: TargetDataInfo = await new TargetData(server).getData()
         if (!writeFileDirPath) {
             let folderUris = await window.showOpenDialog({
                 canSelectFiles: false,
@@ -38,6 +37,7 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
             }
             writeFileDirPath = folderUris[0].path
         }
+        const targetData: TargetDataInfo = await new TargetData(server).getData(writeFileDirPath)
         if (activeServer === server) {
             return
         } else {
