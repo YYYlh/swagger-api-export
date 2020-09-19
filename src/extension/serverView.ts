@@ -6,20 +6,19 @@ import { readFileSync } from 'fs'
 import { startWriteFile } from '../lib/startWriteFile'
 
 function serverView(context: ExtensionContext, server: string, data: TargetDataInfo, writeFileDirPath: string) {
-    const viewPath = join(context.extensionPath, 'src', 'webView')
+    const viewPath = context.asAbsolutePath(join('resources', 'index.html'));
     const panel = ReusedWebviewPanel.create(
         'serverView',
         server,
         ViewColumn.One,
         {
             enableScripts: true,
-            retainContextWhenHidden: true,
-            localResourceRoots: [Uri.file(viewPath)]
+            retainContextWhenHidden: true
         }
     )
 
     const dataDom = `<div id="data">${JSON.stringify(data)}</div>`
-    const html = readFileSync(join(viewPath, 'index.html')).toString().replace('$data', dataDom)
+    const html = readFileSync(viewPath).toString().replace('$data', dataDom)
     panel.webview.html = html
 
     panel.webview.onDidReceiveMessage(
