@@ -60,8 +60,47 @@ export class WriteRestUrlFile extends BaseFs {
             body[0] = importAst
         }
         body[1] = this.apiToAst(apis, key)
-        const program = programBodyTemplate(body)
-        return generate(program)
+        let program = programBodyTemplate(body)
+        program = parseModule(generate(program), {
+            range: true
+        })
+        this.addComment(program, apis)
+        return generate(program, {
+            comment: true
+        })
+    }
+    addComment(program: any, apis: Api[]) {
+        interface comments {
+            [key: string]: string
+        }
+        let commentsObj: comments = {}
+        for (const ii of apis) {
+            commentsObj[this.removeController(ii.name)] = ii.description
+            for (const jj of ii.list) {
+                commentsObj[this.getLastKey(jj.url)] = jj.summary
+            }
+        }
+        traverse(program as any, {
+            leave(node: any) {
+                if (node.type === 'Property') {
+                    const key = node.key
+                    if (key.name in commentsObj) {
+                        const range = key.range
+                        const comment = commentsObj[key.name]
+                        const commentRange1 = range[0] - 5
+                        const commentRange = [commentRange1 - comment.length, commentRange1]
+                        node.leadingComments = [
+                            {
+                                type: "Line",
+                                value: comment,
+                                range: commentRange
+                            }
+                        ]
+                    }
+                }
+            }
+        })
+        return program
     }
 
     apiToAst(apis: Api[], key: string): any {
@@ -78,12 +117,14 @@ export class WriteRestUrlFile extends BaseFs {
     }
 
     // /aaa/bbb/ccc => ccc
-    getLastKey(str: string) {
+    getLastKey(str: string): string {
         let arr = str.split('/')
         return arr[arr.length - 1]
     }
     removeController(str: string) {
-        return hump(str, '-').replace('Controller', '')
+        let reg = /^\s+|\s+$/g
+        let result = hump(str, '-').replace(reg, '').replace('Controller', '')
+        return result
     }
 }
 
