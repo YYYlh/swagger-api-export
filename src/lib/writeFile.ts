@@ -70,7 +70,7 @@ export class WriteRestUrlFile extends BaseFs {
             let api = apis[i]
             let properties: any[] = []
             for (let j = 0, len = api.list.length; j < len; j++) {
-                properties.push(keyValueTemplate( this.getLastKey(api.list[j].url), templateStrTemplate(key, api.list[j].url)))
+                properties.push(keyValueTemplate(this.getLastKey(api.list[j].url), templateStrTemplate(key, api.list[j].url)))
             }
             root.push(objectTemplate(this.removeController(api.name), properties))
         }
