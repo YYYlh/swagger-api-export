@@ -2,7 +2,7 @@
   "name": "swagger-api-export",
   "displayName": "swagger-api export",
   "description": "将swagger上api导出到js文件中",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "keywords": [
     "swagger",
     "js"
