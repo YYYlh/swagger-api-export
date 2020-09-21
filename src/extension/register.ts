@@ -35,7 +35,7 @@ export function registerEvent(context: ExtensionContext, serverProvider: ServerP
             if (!folderUris) {
                 return
             }
-            writeFileDirPath = folderUris[0].path
+            writeFileDirPath = folderUris[0].fsPath
         }
         const targetData: TargetDataInfo = await new TargetData(server).getData(writeFileDirPath)
         if (activeServer === server) {
