@@ -15,7 +15,13 @@ export default class TargetData {
 
     async getData(writeFileDirPath: string): Promise<TargetDataInfo> {
         const resourceData: ServerInfo = await this.fetchServer.request()
-        let key = hump(resourceData.basePath.slice(1), '-')
+        const basePath = resourceData.title.slice(1)
+        let key = ''
+        if (basePath) {
+            key = hump(resourceData.basePath.slice(1), '-')
+        } else {
+            key = 'api'
+        }
         let tempData: TargetDataInfo = {
             key,
             title: resourceData.title,
