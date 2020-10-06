@@ -3,8 +3,6 @@ import { registerEvent } from './extension/register'
 import ServerProvider from './extension/serverProvider'
 import ServerModel from './extension/serverModel'
 
-
-
 export function activate(context: ExtensionContext) {
 	console.log('swagger-api-export is active')
 	const serverProvider = new ServerProvider(context, new ServerModel())

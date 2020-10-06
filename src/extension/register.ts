@@ -6,7 +6,6 @@ import { TargetDataInfo } from '../bean/targetDataInfo'
 import serverView from './serverView'
 
 const serverModel = new ServerModel()
-
 // 注册事件
 export function registerEvent(context: ExtensionContext, serverProvider: ServerProvider) {
     let activeServer = ''
