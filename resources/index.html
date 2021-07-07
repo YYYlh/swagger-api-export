@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #data {
+            display: none;
+        }
+        .h1 {
+            text-align: center;
+        }
+        .parent {
+            font-size: 20px;
+        }
+
+        .child {
+            margin: 10px 0 0 40px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .parentSpan2,
+        .childSpan2 {
+            color: #27ae60
+        }
+    </style>
+</head>
+
+<body>
+    $data
+    <div class="head">
+        <h1 class="h1"></h1>
+        <h2 class="h2"></h2>
+        <button>导出</button>
+    </div>
+    <div id="lh-content"></div>
+</body>
+<script>
+    let h = []
+    let serverData
+    let hightLightColor = '#e74c3c'
+    const vscode = acquireVsCodeApi()
+    !function () {
+        const dataDom = document.body.querySelector('#data')
+        const h1 = document.querySelector('.h1')
+        const h2 = document.querySelector('.h2')
+        serverData = JSON.parse(dataDom.innerHTML)
+        const { baseUrl, title, apis } = serverData
+        h1.innerText = title
+        h2.innerText = baseUrl
+        let contentDom = document.querySelector('#lh-content')
+        for (let i = 0, len = apis.length; i < len; i++) {
+            h[i] = []
+            const parentSpan1 = createElement({ tag: 'span', value: apis[i].name, className: 'parentSpan1' })
+            const parentSpan2 = createElement({ tag: 'span', value: `      //   ${apis[i].description}`, className: 'parentSpan2' })
+            const parentDom = createElement({
+                tag: 'div',
+                className: 'parent',
+                childNodes: [parentSpan1, parentSpan2]
+            })
+            for (let j = 0, len = apis[i].list.length; j < len; j++) {
+                let cur = apis[i].list[j]
+                const childSpan1 = createElement({ tag: 'span', value: baseUrl + cur.url, className: 'childSpan1' })
+                const childSpan2 = createElement({ tag: 'span', value: `     //   ${cur.summary}`, className: 'childSpan2' })
+                const childDom = createElement({ tag: 'div', className: 'child', childNodes: [childSpan1, childSpan2] })
+                if (cur.checked) {
+                    h[i][j] = 1
+                    childDom.style.color = hightLightColor
+                } else {
+                    h[i][j] = 0
+                }
+                parentDom.appendChild(childDom)
+            }
+            contentDom.appendChild(parentDom)
+        }
+        listen()
+    }()
+    function listen(callback) {
+        const parents = document.querySelectorAll('.parent')
+        for (let i = 0, len = parents.length; i < len; i++) {
+            const parent = parents[i]
+            const childs = parent.querySelectorAll('.child')
+            for (let j = 0, len = childs.length; j < len; j++) {
+                const child = childs[j]
+                child.addEventListener('click', (e) => {
+                    if (h[i][j] === 0) {
+                        h[i][j] = 1
+                        child.style.color = hightLightColor
+                    } else {
+                        h[i][j] = 0
+                        child.style.color = ''
+                    }
+                })
+            }
+        }
+        const button = document.querySelector('button')
+        button.addEventListener('click', exportData)
+    }
+    function exportData() {
+        const { baseUrl, title, apis, basePath, key } = serverData
+        let exportData = {
+            key,
+            title,
+            baseUrl,
+            basePath,
+            apis: []
+        }
+        let tempApis = []
+        for(let i = 0, len = h.length; i < len; i++) {
+            let tempApi = {
+                description: apis[i].description,
+                name: apis[i].name,
+                list: []
+            }
+            let list = []
+            for (let j = 0, len = h[i].length; j < len; j++) { 
+                if (h[i][j] === 1) {
+                    list.push({
+                        summary: apis[i].list[j].summary,
+                        url: apis[i].list[j].url
+                    })
+                }
+            }
+            if (list.length !== 0) {
+                tempApi.list = list
+                exportData.apis.push(tempApi)
+            }
+        }
+        vscode.postMessage({
+            command: 'postExportData',
+            data: exportData
+        })
+    }
+    function createElement({ tag, value, className, childNodes }) {
+        let result = document.createElement(tag)
+        if (value !== undefined) {
+            result.innerHTML = value
+            result.innerText = value
+        }
+        if (className !== undefined) {
+            result.className = className
+        }  
+        if (childNodes && childNodes.length >= 0) {
+            for (const item of childNodes) {
+                result.appendChild(item)
+            }
+        }
+        return result
+    }
+</script>
+
+</html>
